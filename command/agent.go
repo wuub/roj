@@ -1,9 +1,12 @@
 package command
 
 import (
-	"github.com/armon/consul-api"
+	"encoding/json"
+	"net/http"
+
 	"github.com/mitchellh/cli"
-	"time"
+	"github.com/wuub/roj/consul"
+	"github.com/wuub/roj/node"
 )
 
 type AgentCommand struct {
@@ -13,25 +16,28 @@ type AgentCommand struct {
 func (c *AgentCommand) Help() string {
 	return ""
 }
+
+type HTTPServer struct {
+	Node *node.Node
+}
+
+func (h *HTTPServer) HandleSysInfo(rw http.ResponseWriter, req *http.Request) {
+
+	buf, _ := json.MarshalIndent(h.Node.SysInfo(), "", " ")
+	rw.Header().Set("Content-Type", "application/json")
+	rw.Write(buf)
+}
+
 func (c *AgentCommand) Run(_ []string) int {
-	config := consulapi.DefaultConfig()
-	config.Address = "172.16.1.1"
-	client, _ := consulapi.NewClient(config)
-	agent := client.Agent()
-
-	reg := &consulapi.AgentServiceRegistration{
-		ID:   "roj-node",
-		Name: "roj-node",
-		Port: 8000,
-	}
-
-	if err := agent.ServiceRegister(reg); err != nil {
+	node := node.New()
+	err := consul.RegisterNode(*node)
+	if err != nil {
 		panic(err)
 	}
 
-	time.Sleep(10 * time.Second)
-	defer agent.ServiceDeregister(reg.ID)
-
+	h := HTTPServer{Node: node}
+	http.HandleFunc("/v1/node/sysinfo", h.HandleSysInfo)
+	http.ListenAndServe(":8080", nil)
 	return 0
 }
 func (c *AgentCommand) Synopsis() string {
