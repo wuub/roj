@@ -19,11 +19,11 @@ func New() *Node {
 }
 
 type SysInfo struct {
-	LoadAvg       *gopsutil.LoadAvgStat
+	LoadAvg       gopsutil.LoadAvgStat
 	CPUInfo       []gopsutil.CPUInfoStat
-	HostInfo      *gopsutil.HostInfoStat
-	SwapMemory    *gopsutil.SwapMemoryStat
-	VirtualMemory *gopsutil.VirtualMemoryStat
+	HostInfo      gopsutil.HostInfoStat
+	SwapMemory    gopsutil.SwapMemoryStat
+	VirtualMemory gopsutil.VirtualMemoryStat
 }
 
 func (n *Node) SysInfo() *SysInfo {
@@ -31,15 +31,14 @@ func (n *Node) SysInfo() *SysInfo {
 	cpuInfo, _ := gopsutil.CPUInfo()
 	loadAvg, _ := gopsutil.LoadAvg()
 	hostInfo, _ := gopsutil.HostInfo()
-
 	swapMemory, _ := gopsutil.SwapMemory()
 	virtualMemory, _ := gopsutil.VirtualMemory()
 
 	return &SysInfo{
-		HostInfo:      hostInfo,
-		LoadAvg:       loadAvg,
+		HostInfo:      *hostInfo,
+		LoadAvg:       *loadAvg,
 		CPUInfo:       cpuInfo,
-		SwapMemory:    swapMemory,
-		VirtualMemory: virtualMemory,
+		SwapMemory:    *swapMemory,
+		VirtualMemory: *virtualMemory,
 	}
 }

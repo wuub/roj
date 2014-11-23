@@ -14,5 +14,6 @@ func init() {
 
 	Commands = map[string]cli.CommandFactory{
 		"agent": func() (cli.Command, error) { return &command.AgentCommand{Ui: ui}, nil },
+		"nodes": func() (cli.Command, error) { return &command.NodesCommand{Ui: ui}, nil },
 	}
 }

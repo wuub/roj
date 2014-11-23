@@ -1,8 +1,10 @@
 package command
 
 import (
-	"github.com/armon/consul-api"
+	"fmt"
+
 	"github.com/mitchellh/cli"
+	"github.com/wuub/roj/consul"
 )
 
 type NodesCommand struct {
@@ -13,17 +15,11 @@ func (c *NodesCommand) Help() string {
 	return ""
 }
 func (c *NodesCommand) Run(_ []string) int {
-	config := consulapi.DefaultConfig()
-	config.Address = "172.16.1.1:80"
-	client, _ := consulapi.NewClient(config)
-	catalog := client.Catalog()
 
-	nodes, _, err := catalog.Nodes(nil)
-	if err != nil {
-		panic(err)
-	}
-	for _, node := range nodes {
-		c.Ui.Output(node.Node + node.Address)
+	nodes, _ := consul.FindNodes(false)
+
+	for _, n := range nodes {
+		fmt.Printf("%s\n", n.String())
 	}
 	return 0
 }

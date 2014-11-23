@@ -29,3 +29,24 @@ func RegisterNode(node node.Node) (err error) {
 
 	return nil
 }
+
+func FindNodes(all bool) (nodes []*RemoteNode, err error) {
+	client, err := NewConsulClient()
+
+	if err != nil {
+		return
+	}
+
+	services, _, err := client.Health().Service("roj-node", "", false, nil)
+
+	if err != nil {
+		return
+	}
+
+	nodes = make([]*RemoteNode, len(services))
+	for idx, s := range services {
+		nodes[idx] = &RemoteNode{s, nil}
+	}
+
+	return nodes, nil
+}

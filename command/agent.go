@@ -22,7 +22,6 @@ type HTTPServer struct {
 }
 
 func (h *HTTPServer) HandleSysInfo(rw http.ResponseWriter, req *http.Request) {
-
 	buf, _ := json.MarshalIndent(h.Node.SysInfo(), "", " ")
 	rw.Header().Set("Content-Type", "application/json")
 	rw.Write(buf)
@@ -37,7 +36,7 @@ func (c *AgentCommand) Run(_ []string) int {
 
 	h := HTTPServer{Node: node}
 	http.HandleFunc("/v1/node/sysinfo", h.HandleSysInfo)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe("0.0.0.0:8000", nil)
 	return 0
 }
 func (c *AgentCommand) Synopsis() string {
