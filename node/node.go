@@ -28,11 +28,26 @@ type SysInfo struct {
 
 func (n *Node) SysInfo() *SysInfo {
 
-	cpuInfo, _ := gopsutil.CPUInfo()
-	loadAvg, _ := gopsutil.LoadAvg()
-	hostInfo, _ := gopsutil.HostInfo()
-	swapMemory, _ := gopsutil.SwapMemory()
-	virtualMemory, _ := gopsutil.VirtualMemory()
+	cpuInfo, err := gopsutil.CPUInfo()
+	if err != nil {
+		panic(err)
+	}
+	loadAvg, err := gopsutil.LoadAvg()
+	if err != nil {
+		panic(err)
+	}
+	hostInfo, err := gopsutil.HostInfo()
+	if err != nil {
+		panic(err)
+	}
+	swapMemory, err := gopsutil.SwapMemory()
+	if err != nil {
+		panic(err)
+	}
+	virtualMemory, err := gopsutil.VirtualMemory()
+	if err != nil {
+		panic(err)
+	}
 
 	return &SysInfo{
 		HostInfo:      *hostInfo,
