@@ -13,7 +13,8 @@ func init() {
 	ui := &cli.BasicUi{Writer: os.Stdout}
 
 	Commands = map[string]cli.CommandFactory{
-		"agent": func() (cli.Command, error) { return &command.AgentCommand{Ui: ui}, nil },
-		"nodes": func() (cli.Command, error) { return &command.NodesCommand{Ui: ui}, nil },
+		"agent":     func() (cli.Command, error) { return &command.AgentCommand{Ui: ui}, nil },
+		"nodes":     func() (cli.Command, error) { return &command.NodesCommand{Ui: ui}, nil },
+		"instances": func() (cli.Command, error) { return &command.InstancesCommand{Ui: ui}, nil },
 	}
 }
