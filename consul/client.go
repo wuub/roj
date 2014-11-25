@@ -50,3 +50,13 @@ func FindNodes(all bool) (nodes []*RemoteNode, err error) {
 
 	return nodes, nil
 }
+
+func UploadTemplate(name string, content []byte) (err error) {
+	client, err := NewConsulClient()
+	if err != nil {
+		return
+	}
+	p := &consulapi.KVPair{Key: "roj/templates/" + name, Value: content}
+	_, err = client.KV().Put(p, nil)
+	return
+}
