@@ -25,6 +25,16 @@ type Template struct {
 	Containers    map[string]ContainerDefinition `json:"containers,omitempty"`
 }
 
+func New(data []byte) (t *Template, err error) {
+	if err = t.Unmarshal(data); err != nil {
+		return
+	}
+	if err = t.Unmarshal(data); err != nil {
+		return
+	}
+	return t, nil
+}
+
 func (t *Template) SetDefaults() {
 	if t.SchemaVersion == "" {
 		t.SchemaVersion = defaultSchemaVersion
@@ -34,14 +44,28 @@ func (t *Template) SetDefaults() {
 	}
 }
 
+func (t *Template) Key() string {
+	t.SetDefaults()
+	return t.Name + "/" + t.Tag
+}
+
 func (t *Template) Upload(consul *consulapi.Client) error {
 	content, err := json.Marshal(t)
 	if err != nil {
 		return err
 	}
-	p := &consulapi.KVPair{Key: templatePrefix + t.Name + "/" + t.Tag, Value: content}
+	p := &consulapi.KVPair{Key: templatePrefix + t.Key(), Value: content}
 	_, err = consul.KV().Put(p, nil)
 	return err
+}
+
+func (t *Template) Fetch(consul *consulapi.Client) error {
+	pair, _, err := consul.KV().Get(templatePrefix+t.Key(), nil)
+	if err != nil {
+		return err
+	}
+	t.Unmarshal(pair.Value)
+	return nil
 }
 
 func (t *Template) Unmarshal(data []byte) error {

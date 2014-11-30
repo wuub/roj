@@ -39,7 +39,7 @@ func (c *ListTemplatesCommand) Run(args []string) int {
 	}
 
 	for _, t := range templates {
-		c.Ui.Output(fmt.Sprintf("%s:%s\t%d", t.Name, t.Tag, len(t.Containers)))
+		c.Ui.Output(fmt.Sprintf("%s/%s\t%d", t.Name, t.Tag, len(t.Containers)))
 	}
 
 	return 0
