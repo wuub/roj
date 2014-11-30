@@ -1,7 +1,7 @@
 {
 	"name": "nginx",
 	"containers": {
-		"redis": {
+		"nginx": {
 			"config": {
 				"image": "nginx:latest"
 			}

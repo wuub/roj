@@ -16,5 +16,6 @@ func init() {
 		"upload-template": func() (cli.Command, error) { return &command.UploadTemplateCommand{Ui: ui}, nil },
 		"list-templates":  func() (cli.Command, error) { return &command.ListTemplatesCommand{Ui: ui}, nil },
 		"new-instance":    func() (cli.Command, error) { return &command.NewInstanceCommand{Ui: ui}, nil },
+		"apply":           func() (cli.Command, error) { return &command.ApplyCommand{Ui: ui}, nil },
 	}
 }

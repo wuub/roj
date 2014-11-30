@@ -3,7 +3,7 @@
 	"containers": {
 		"redis": {
 			"config": {
-				"image": "redis:latest"
+				"image": "redis:2.8"
 			}
 		}
 	}

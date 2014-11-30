@@ -10,8 +10,7 @@ import (
 )
 
 type uploadConf struct {
-	file     string
-	template template.Template
+	file string
 }
 
 type UploadTemplateCommand struct {
@@ -43,23 +42,25 @@ func (c *UploadTemplateCommand) Run(args []string) int {
 		c.Ui.Error("")
 		return 1
 	}
-	if err = c.conf.template.Unmarshal(content); err != nil {
-		c.Ui.Error("Must specify a valid template file")
-		c.Ui.Error("")
-		return 1
-	}
 
 	consulClient, err := consulapi.NewClient(consulapi.DefaultConfig())
 	if err != nil {
 		panic(err)
 	}
 
-	err = c.conf.template.Upload(consulClient)
+	t, err := template.New(consulClient, content)
+	if err != nil {
+		c.Ui.Error("Must specify a valid template file")
+		c.Ui.Error("")
+		return 1
+	}
+
+	err = t.Upload()
 	if err != nil {
 		panic(err)
 	}
 
-	c.Ui.Output(c.conf.template.Name)
+	c.Ui.Output(t.Name)
 	return 0
 }
 func (c *UploadTemplateCommand) Synopsis() string {

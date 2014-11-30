@@ -45,9 +45,9 @@ func (c *NewInstanceCommand) Run(args []string) int {
 		panic(err)
 	}
 
-	inst := instance.New(c.conf.node, c.conf.template)
+	inst := instance.New(consulClient, c.conf.node, c.conf.template)
 
-	if err = inst.Upload(consulClient); err != nil {
+	if err = inst.Upload(); err != nil {
 		panic(err)
 	}
 

@@ -23,9 +23,12 @@ type Template struct {
 	Name          string                         `json:"name,omitempty"`
 	Tag           string                         `json:"tag,omitempty"`
 	Containers    map[string]ContainerDefinition `json:"containers,omitempty"`
+	consulClient  *consulapi.Client              `json:"-"`
 }
 
-func New(data []byte) (t *Template, err error) {
+func New(consul *consulapi.Client, data []byte) (t *Template, err error) {
+	t = new(Template)
+	t.consulClient = consul
 	if err = t.Unmarshal(data); err != nil {
 		return
 	}
@@ -49,13 +52,13 @@ func (t *Template) Key() string {
 	return t.Name + "/" + t.Tag
 }
 
-func (t *Template) Upload(consul *consulapi.Client) error {
+func (t *Template) Upload() error {
 	content, err := json.Marshal(t)
 	if err != nil {
 		return err
 	}
 	p := &consulapi.KVPair{Key: templatePrefix + t.Key(), Value: content}
-	_, err = consul.KV().Put(p, nil)
+	_, err = t.consulClient.KV().Put(p, nil)
 	return err
 }
 
@@ -65,6 +68,7 @@ func (t *Template) Fetch(consul *consulapi.Client) error {
 		return err
 	}
 	t.Unmarshal(pair.Value)
+	t.consulClient = consul
 	return nil
 }
 
@@ -91,6 +95,7 @@ func List(consul *consulapi.Client) (templates []Template, err error) {
 	templates = make([]Template, len(kvPairs))
 
 	for i, kvPair := range kvPairs {
+		templates[i].consulClient = consul
 		if err = templates[i].Unmarshal(kvPair.Value); err != nil {
 			return
 		}
