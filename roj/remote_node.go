@@ -1,4 +1,4 @@
-package consul
+package roj
 
 import (
 	"encoding/json"
@@ -6,12 +6,11 @@ import (
 	"net/http"
 
 	"github.com/armon/consul-api"
-	"github.com/wuub/roj/node"
 )
 
 type RemoteNode struct {
 	service *consulapi.ServiceEntry
-	sysinfo *node.SysInfo
+	sysinfo *SysInfo
 }
 
 func (r *RemoteNode) Name() string {
@@ -39,9 +38,9 @@ func (r *RemoteNode) Status() string {
 	return "passing"
 }
 
-func (r *RemoteNode) SysInfo() *node.SysInfo {
+func (r *RemoteNode) SysInfo() *SysInfo {
 	if r.sysinfo == nil {
-		r.sysinfo = new(node.SysInfo)
+		r.sysinfo = new(SysInfo)
 		resp, err := http.Get(r.ApiRoot() + "/v1/node/sysinfo")
 		if err != nil {
 			return r.sysinfo

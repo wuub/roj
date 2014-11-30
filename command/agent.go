@@ -5,8 +5,7 @@ import (
 	"net/http"
 
 	"github.com/mitchellh/cli"
-	"github.com/wuub/roj/consul"
-	"github.com/wuub/roj/node"
+	"github.com/wuub/roj/roj"
 )
 
 type AgentCommand struct {
@@ -18,7 +17,7 @@ func (c *AgentCommand) Help() string {
 }
 
 type HTTPServer struct {
-	Node *node.Node
+	Node *roj.Node
 }
 
 func (h *HTTPServer) HandleSysInfo(rw http.ResponseWriter, req *http.Request) {
@@ -28,8 +27,8 @@ func (h *HTTPServer) HandleSysInfo(rw http.ResponseWriter, req *http.Request) {
 }
 
 func (c *AgentCommand) Run(_ []string) int {
-	node := node.New()
-	err := consul.RegisterNode(*node)
+	node := roj.NewNode()
+	err := roj.RegisterNode(*node)
 	if err != nil {
 		panic(err)
 	}

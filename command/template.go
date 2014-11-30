@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 
 	"github.com/mitchellh/cli"
-	"github.com/wuub/roj/consul"
+	"github.com/wuub/roj/roj"
 )
 
 type TemplateCommand struct {
@@ -36,7 +36,7 @@ func (c *TemplateCommand) Run(args []string) int {
 		return 2
 	}
 
-	err = consul.UploadTemplate(args[1], content)
+	err = roj.UploadTemplate(args[1], content)
 	if err != nil {
 		panic(err)
 	}

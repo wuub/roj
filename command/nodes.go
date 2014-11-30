@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/mitchellh/cli"
-	"github.com/wuub/roj/consul"
+	"github.com/wuub/roj/roj"
 )
 
 type NodesCommand struct {
@@ -16,7 +16,7 @@ func (c *NodesCommand) Help() string {
 }
 func (c *NodesCommand) Run(_ []string) int {
 
-	nodes, _ := consul.FindNodes(false)
+	nodes, _ := roj.FindNodes(false)
 
 	for _, n := range nodes {
 		fmt.Printf("%s\n", n.String())

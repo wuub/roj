@@ -1,4 +1,4 @@
-package node
+package roj
 
 import (
 	"os"
@@ -10,7 +10,7 @@ type Node struct {
 	Name string
 }
 
-func New() *Node {
+func NewNode() *Node {
 	name, err := os.Hostname()
 	if err != nil {
 		panic(err)

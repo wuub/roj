@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/mitchellh/cli"
-	"github.com/wuub/roj/docker"
+	"github.com/wuub/roj/roj"
 )
 
 type InstancesCommand struct {
@@ -16,7 +16,7 @@ func (c *InstancesCommand) Help() string {
 }
 func (c *InstancesCommand) Run(_ []string) int {
 
-	instances, _ := docker.FindInstances()
+	instances, _ := roj.FindInstances()
 
 	for _, instance := range instances {
 		fmt.Printf("%s\n", instance)

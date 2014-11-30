@@ -1,15 +1,16 @@
-package consul
+package roj
 
 import (
+	"encoding/json"
+
 	"github.com/armon/consul-api"
-	"github.com/wuub/roj/node"
 )
 
 func NewConsulClient() (*consulapi.Client, error) {
 	return consulapi.NewClient(consulapi.DefaultConfig())
 }
 
-func RegisterNode(node node.Node) (err error) {
+func RegisterNode(node Node) (err error) {
 	client, err := NewConsulClient()
 	if err != nil {
 		return
@@ -57,6 +58,37 @@ func UploadTemplate(name string, content []byte) (err error) {
 		return
 	}
 	p := &consulapi.KVPair{Key: "roj/templates/" + name, Value: content}
+	_, err = client.KV().Put(p, nil)
+	return
+}
+
+func FetchTemplate(name string) (template Template, err error) {
+	client, err := NewConsulClient()
+	if err != nil {
+		return
+	}
+	kvPair, _, err := client.KV().Get(name, nil)
+	if err != nil {
+		return
+	}
+
+	template = Template{}
+	err = json.Unmarshal(kvPair.Value, &template)
+	if err != nil {
+		return
+	}
+
+	return template, nil
+}
+
+func AssignTemplate(template, node string) (err error) {
+	client, err := NewConsulClient()
+	if err != nil {
+		return
+	}
+	instanceId := "i-random"
+	content, _ := json.Marshal(map[string]string{"id": instanceId, "template": template})
+	p := &consulapi.KVPair{Key: "roj/instances/" + node + "/" + instanceId, Value: content}
 	_, err = client.KV().Put(p, nil)
 	return
 }
