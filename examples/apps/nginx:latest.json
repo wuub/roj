@@ -1,0 +1,10 @@
+{
+	"name": "nginx",
+	"containers": {
+		"redis": {
+			"config": {
+				"image": "nginx:latest"
+			}
+		}
+	}
+}

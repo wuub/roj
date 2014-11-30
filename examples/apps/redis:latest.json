@@ -1,6 +1,5 @@
 {
-	"name": "redis-app",
-	"version": "v1.0.0",
+	"name": "redis",
 	"containers": {
 		"redis": {
 			"config": {
