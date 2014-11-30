@@ -7,9 +7,11 @@ import (
 	"github.com/fsouza/go-dockerclient"
 )
 
-const templatePrefix = "roj/templates/"
-const defaultSchemaVersion = "1.0.0"
-const defaultTag = "latest"
+const (
+	templatePrefix       = "roj/templates/"
+	defaultSchemaVersion = "1.0.0"
+	defaultTag           = "latest"
+)
 
 type ContainerDefinition struct {
 	Config     docker.Config     `json:"config,omitempty"`
@@ -33,7 +35,6 @@ func (t *Template) SetDefaults() {
 }
 
 func (t *Template) Upload(consul *consulapi.Client) error {
-	t.SetDefaults()
 	content, err := json.Marshal(t)
 	if err != nil {
 		return err
@@ -43,6 +44,11 @@ func (t *Template) Upload(consul *consulapi.Client) error {
 	return err
 }
 
+func (t *Template) Unmarshal(data []byte) error {
+	t.SetDefaults()
+	return json.Unmarshal(data, t)
+}
+
 func (t *Template) String() string {
 	content, err := json.MarshalIndent(t, "", "  ")
 	if err != nil {
@@ -50,4 +56,21 @@ func (t *Template) String() string {
 	}
 
 	return string(content)
+}
+
+func ListTemplates(consul *consulapi.Client) (templates []Template, err error) {
+	kvPairs, _, err := consul.KV().List(templatePrefix, nil)
+	if err != nil {
+		return
+	}
+
+	templates = make([]Template, len(kvPairs))
+
+	for i, kvPair := range kvPairs {
+		if err = templates[i].Unmarshal(kvPair.Value); err != nil {
+			return
+		}
+	}
+
+	return templates, nil
 }

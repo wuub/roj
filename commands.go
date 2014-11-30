@@ -14,5 +14,6 @@ func init() {
 
 	Commands = map[string]cli.CommandFactory{
 		"upload-template": func() (cli.Command, error) { return &command.UploadTemplateCommand{Ui: ui}, nil },
+		"list-templates":  func() (cli.Command, error) { return &command.ListTemplatesCommand{Ui: ui}, nil },
 	}
 }

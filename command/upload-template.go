@@ -1,7 +1,6 @@
 package command
 
 import (
-	"encoding/json"
 	"flag"
 	"io/ioutil"
 
@@ -44,7 +43,7 @@ func (c *UploadTemplateCommand) Run(args []string) int {
 		c.Ui.Error("")
 		return 1
 	}
-	if err = json.Unmarshal(content, &c.conf.template); err != nil {
+	if err = c.conf.template.Unmarshal(content); err != nil {
 		c.Ui.Error("Must specify a valid template file")
 		c.Ui.Error("")
 		return 1
@@ -59,6 +58,8 @@ func (c *UploadTemplateCommand) Run(args []string) int {
 	if err != nil {
 		panic(err)
 	}
+
+	c.Ui.Output(c.conf.template.Name)
 	return 0
 }
 func (c *UploadTemplateCommand) Synopsis() string {
