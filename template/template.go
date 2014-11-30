@@ -82,7 +82,7 @@ func (t *Template) String() string {
 	return string(content)
 }
 
-func ListTemplates(consul *consulapi.Client) (templates []Template, err error) {
+func List(consul *consulapi.Client) (templates []Template, err error) {
 	kvPairs, _, err := consul.KV().List(templatePrefix, nil)
 	if err != nil {
 		return

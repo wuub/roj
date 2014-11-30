@@ -33,7 +33,7 @@ func (c *ListTemplatesCommand) Run(args []string) int {
 		panic(err)
 	}
 
-	templates, err := template.ListTemplates(consulClient)
+	templates, err := template.List(consulClient)
 	if err != nil {
 		panic(err)
 	}

@@ -47,3 +47,19 @@ func (i *Instance) String() string {
 	res, _ := json.MarshalIndent(i, "", "  ")
 	return string(res)
 }
+
+func List(consul *consulapi.Client, prefix string) (instances []Instance, err error) {
+	kvPairs, _, err := consul.KV().List(instancesPrefix+prefix, nil)
+	if err != nil {
+		return
+	}
+
+	instances = make([]Instance, len(kvPairs))
+	for i, kvPair := range kvPairs {
+		if err = json.Unmarshal(kvPair.Value, &instances[i]); err != nil {
+			return
+		}
+	}
+
+	return instances, nil
+}
