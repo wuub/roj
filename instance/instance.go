@@ -28,6 +28,7 @@ func New(consul *consulapi.Client, node, templateName string) *Instance {
 	id := make([]byte, 16)
 	rand.Read(id)
 	inst.Id = hex.EncodeToString(id)
+	inst.consulClient = consul
 
 	return &inst
 }
