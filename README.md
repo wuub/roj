@@ -1,16 +1,17 @@
-# roj - opinionated Docker orchestration for growing infrastructures
+# roj - opinionated container orchestration for growing infrastructures
 
 
 ## Concepts
 
-* node - machine running *docker*, *consul* and *roj* daemons 
+* node - machine running *roj* daemon 
+* roj cluster - any number of roj nodes connected to the same consul cluster
 * app - a set of docker containers that can be launched multiple times 
 * instance - an app running on a single node
 
 
 ## Preparing a Consul cluster 
 
-__you may skip this paragraph if you already have a functional consul cluster__
+__you may skip this paragraph if you already have a running consul cluster__
 
 Roj uses consul for all of its features: node discovery, membership, access control, persistent metadata storage, change notifications and redeploys.
 
@@ -28,12 +29,28 @@ Obviously, such deployment suffers from all kinds of availability issues but run
 
 ## Defining an app
 
-You can create a single constainer app using following command.
+You can create a single container app using the following command.
 
 $ roj create web:v1 nginx:1.7.1 -p 80:8080 
 
-This will define **v1** version of **web** application. This app will use 1.7.1 tag (version) of **nginx** image available on public docker registry.
+It will create **v1** version of **web** app. This app will use **1.7.1** tag of **nginx** image available on public docker registry.  Once launched on a node, web:v1 app will be available on port 8080, forwarding all of the traffic to port 80 of nginx container.
 
+## Listing all defined apps
+
+Next we'll check that we have successfuly defined our web:v1 app. 
+
+When you issue 
+
+$ roj apps
+
+you should see an output similiar to this one
+
+[[TODO, show output of roj apps]]
+
+
+## Adding a node to roj cluster
+
+Creating apps is all 
 
 
 
