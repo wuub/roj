@@ -6,7 +6,7 @@
 * node - machine running *roj* daemon 
 * roj cluster - any number of roj nodes connected to the same consul cluster
 * app - a set of docker containers that can be launched multiple times 
-* instance - an app running on a single node
+* app instance - an app running on a single node
 
 
 ## Preparing a Consul cluster 
@@ -33,13 +33,13 @@ You can create a single container app using the following command.
 
 $ roj create web:v1 nginx:1.7.1 -p 80:8080 
 
-It will create **v1** version of **web** app. This app will use **1.7.1** tag of **nginx** image available on public docker registry.  Once launched on a node, web:v1 app will be available on port 8080, forwarding all of the traffic to port 80 of nginx container.
+It will create **v1** version of **web** app. This app will use **nginx** image available on public docker registry, specifically tag **1.7.1**.  Once launched on a node, web:v1 app will be available on port 8080, forwarding all of the traffic to port 80 of nginx container.
 
 ## Listing all defined apps
 
-Next we'll check that we have successfuly defined our web:v1 app. 
+Next we'll check that we have correctly defined our web:v1 app. 
 
-When you issue 
+When you use following command:
 
 $ roj apps
 
@@ -50,7 +50,30 @@ you should see an output similiar to this one
 
 ## Adding a node to roj cluster
 
-Creating apps is all 
+Creating apps is all nice and fine, but to be able to do any real work we need to launch them. Right now all we have is an app __definition__. To use it, we require a place where it will run, what we need is a **roj node**.
+
+Lets see if we have one:
+
+$ roj nodes
+
+[[ TODO: empty output of roj nodes]]
+
+Since we didn't launch any nodes yet, our roj cluster is predictably empty.
+
+Fortunately it's very easy to fix. Open a **new terminal** and issue following command launching **roj node daemon**
+
+$ roj agent
+
+[[ TODO: output of default roj agent ]]
+
+If everything goes well, roj will connect to local consul agent, register itself, display some helpful output and **block** waiting for orders to execute.
+
+Leave the agent running and go back to the previous terminal. Try running   
+
+$ roj nodes 
+
+You'll notice that our cluster is no longer empty. Great job! Now we can start deploying out apps.
+
 
 
 
