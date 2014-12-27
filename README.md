@@ -100,6 +100,46 @@ $ roj instances node1
 
 [[ TODO: output of default roj instances ]]
 
+Look for "launched" state. Roj doesn't track if the app is running, relying instead on the docker daemon, but it does know if it was able to launch is successfully.
+
+
+## Upgrading an app
+
+
+App upgrades are the most important part of roj. While new apps are rarely deployed on a daily basis, it's quite common in modern organization to see dozens of upgrades per day per app.
+
+Upgrade paths can be complex, with different requirements (rolling, staged, sharded deploys) and constraints (synchronized deploys, maintenance windows).
+
+Downgrades and rollbacks are important, and can have very different time constraints from normal upgrades. 
+
+While Roj does not attempt to solve those problems for you, it does try to make them more manageable by providing well defined building blocks and promises. If used correctly, you will be able to reason about the state of your system even after partitions or unexpected node outage/recovery. 
+
+# Declarative nature of roj
+
+Many of roj's constraints, promises and behaviors can be directly traced to it's declarative nature. Most actions described in the getting started tutorial operate on cluster metadata only, describing a state we want the cluster to be in, not necessarily performing any actions leading to this state. 
+
+Each roj agent will periodically perform anti-entropy on the node it's managing. If for any reason current state differs from the one required by cluster metadata, agent will perform any actions required to synchronize actual state with the one required. Anti-entropy does not differentiate between upgrades, downgrades, deploys, undeploys or overriding operator manual actions. 
+
+Declarative nature makes roj more indirect and a bit more tricky to understand in the happy-case. It also makes it much easier to reason about in the event of partial failure. It allows you to make changes to node's metadata when the machine itself is currently offline, guaranteeing anti-entropy as soon as it's back online.
+
+[TODO: describe operation modes in other common failure scenarios]
+
+# Immediate nature of roj
+
+Although we do like 
+
+
+
+
+
+## Anti-entropy
+# Roj agent pull mode
+
+## Garbage collection
+# Containers
+# Images
+
+## Events
 
 
 
