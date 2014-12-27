@@ -72,15 +72,20 @@ Leave the agent running and go back to the previous terminal. Try running
 
 $ roj nodes 
 
-You'll notice that our cluster is no longer empty. Great job! Now we can start deploying out apps.
+You'll notice that our cluster is no longer empty. Great job! Now we can start deploying our apps.
 
 
+## Deploying an app
 
+Once we are sure our cluster has both app definition and some nodes, we can begin doing some real work. Specifically deploying our beautiful apps to handle some real traffic or do real calculations. Lets do this now:
 
+$ roj deploy web:v1 node1
 
+This command will tell roj to deploy web:v1 application on node1. It's important to understand separation of concerns when it comes to deploying applications. What deploy command does is pretty simple, it validates that both app definition and node are correctly configured, and then modifies node1's metadata in consul KV store requesting that web:v1 app should be running there.
 
+What it does not do is launch any containers or waits for the app to be available. 
 
-
+Any image pulling and launching containers is fully under control of roj agent running on node1.
 
 
 ## Inspiration and other projects
