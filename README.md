@@ -81,11 +81,27 @@ Once we are sure our cluster has both app definition and some nodes, we can begi
 
 $ roj deploy web:v1 node1
 
+[[ TODO: output of default roj deploy ]]
+
+Roj deploy will output instance-id. It's a key that uniquely identifies app instance int the roj cluster.
+
+
 This command will tell roj to deploy web:v1 application on node1. It's important to understand separation of concerns when it comes to deploying applications. What deploy command does is pretty simple, it validates that both app definition and node are correctly configured, and then modifies node1's metadata in consul KV store requesting that web:v1 app should be running there.
 
-What it does not do is launch any containers or waits for the app to be available. 
+What it does not do is launch any containers or waits for the app to be available. Any image pulling, reconfiguration, launching containers, port allocation, and so on and so forth if full under control roj agent control running on node1. In most cases changes should be visible almost instantly, but under heavy contention or when node1 is partitioned from consul quorum, it might take it arbitrarily long to launch app instance.
 
-Any image pulling and launching containers is fully under control of roj agent running on node1.
+To know that, we need to use a different command
+
+## Listing app instances and checking their state
+
+To check if our instance launched successfully look at the metadata.
+
+$ roj instances node1
+
+[[ TODO: output of default roj instances ]]
+
+
+
 
 
 ## Inspiration and other projects
