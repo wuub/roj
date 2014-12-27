@@ -26,6 +26,13 @@ consul agent --server --bootstrap --data-dir=/var/consul -advertise=127.0.0.1
 
 Obviously, such deployment suffers from all kinds of availability issues but running roj on a single VM/VPS is definitely **supported**.  Smooth migration from single-node to multi-node to multi-dc deployment is one of roj design aims. 
 
+## Checking your roj version
+
+Install roj on your machine by placing roj binary somewhere on your PATH.  
+
+Check if it's correctly installed by using 
+
+$ roj version
 
 ## Defining an app
 
