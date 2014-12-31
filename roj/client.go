@@ -5,11 +5,9 @@ import (
 	"strings"
 )
 
-type App struct {
-}
-
 type Client interface {
-	Apps() ([]App, error)
+	Apps() (map[string]AppDefinition, error)
+	AddAppDefinition(AppDefinition) error
 }
 
 func NewClient(urn string) (cli Client, err error) {

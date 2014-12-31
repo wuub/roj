@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -29,7 +30,13 @@ func main() {
 	}
 
 	if args[0] == "apps" {
-		cli, err := roj.NewClient("consul://127.0.0.1:8500")
+		appsFlags := flag.NewFlagSet("apps", flag.ContinueOnError)
+		cluster := appsFlags.String("cluster", "http://127.0.0.1:8500", "consul cluster address")
+		appsFlags.Parse(args[1:])
+
+		fmt.Println(*cluster)
+
+		cli, err := roj.NewClient(*cluster)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -40,6 +47,7 @@ func main() {
 		for _, app := range apps {
 			fmt.Printf("%s \n", app)
 		}
+		os.Exit(0)
 	}
 
 	os.Exit(1)
