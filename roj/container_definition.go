@@ -5,3 +5,7 @@ type ContainerDefinition struct {
 	PublishedPorts []string
 	Volumes        []string
 }
+
+func NewContainerDefinition() ContainerDefinition {
+	return *new(ContainerDefinition)
+}

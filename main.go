@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -29,17 +28,17 @@ func main() {
 		os.Exit(0)
 	}
 
-	if args[0] == "apps" {
-		appsFlags := flag.NewFlagSet("apps", flag.ContinueOnError)
-		cluster := appsFlags.String("cluster", "http://127.0.0.1:8500", "consul cluster address")
-		appsFlags.Parse(args[1:])
+	urn := os.Getenv("ROJ_CONSUL")
+	if urn == "" {
+		urn = "http://127.0.0.1:8500"
+	}
+	cli, err := roj.NewClient(urn)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-		fmt.Println(*cluster)
-
-		cli, err := roj.NewClient(*cluster)
-		if err != nil {
-			log.Fatal(err)
-		}
+	switch args[0] {
+	case "apps":
 		apps, err := cli.Apps()
 		if err != nil {
 			log.Fatal(err)
@@ -48,6 +47,23 @@ func main() {
 			fmt.Printf("%s \n", app)
 		}
 		os.Exit(0)
+	case "create":
+		app := roj.NewAppDefinition()
+		if err := app.Name.Set(args[1]); err != nil {
+			log.Fatal(err)
+		}
+
+		container := roj.NewContainerDefinition()
+		container.Image = args[2]
+
+		app.Containers[app.ID+"_"+app.Name.Name] = container
+
+		if err = cli.AddAppDefinition(app); err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("%v", app)
+		os.Exit(0)
+
 	}
 
 	os.Exit(1)
